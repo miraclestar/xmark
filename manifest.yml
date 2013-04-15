@@ -1,0 +1,14 @@
+--- 
+applications: 
+- name: studytree
+  framework: java_web
+  runtime: java
+  memory: 512M
+  instances: 1
+  url: studytree.${target-base}
+  path: .
+  services: 
+    mysql-4b1e4: 
+      vendor: mysql
+      version: "5.1"
+      tier: free

@@ -1,0 +1,17 @@
+body {
+	font-family: "Trebuchet MS", "Helvetica", "Arial", "Verdana",
+		"sans-serif";
+	font-size: 62.5%;
+	width: 700px;
+	margin: 20px auto;
+}
+
+.main {
+	margin: 50px auto;
+	height: 400px;
+	clear:both
+}
+.bottom{
+	margin: 20px auto;
+	text-align:center;
+}

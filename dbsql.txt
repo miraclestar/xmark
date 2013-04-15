@@ -1,0 +1,32 @@
+CREATE TABLE `site` (
+   `id` int(11) NOT NULL AUTO_INCREMENT,
+   `sname` varchar(127) DEFAULT NULL,
+   `surl` varchar(511) DEFAULT NULL,
+   `sdesc` varchar(511) DEFAULT NULL,
+   `spropid` int(11) DEFAULT NULL COMMENT '属于哪个专业',
+   `insert_time` datetime DEFAULT NULL,
+   PRIMARY KEY (`id`),
+   UNIQUE KEY `NewIndex1` (`sname`)
+ ) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8
+ 
+ 
+ CREATE TABLE `user_site` (
+   `user_id` int(11) NOT NULL,
+   `site_id` int(11) NOT NULL,
+   `category` varchar(50) DEFAULT NULL,
+   `descrip` varchar(255) DEFAULT NULL,
+   `delflag` tinyint(4) DEFAULT NULL,
+   `in_time` datetime DEFAULT NULL,
+   `del_time` datetime DEFAULT NULL,
+   `order_no` int(11) DEFAULT NULL,
+   PRIMARY KEY (`user_id`,`site_id`)
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8
+ 
+ CREATE TABLE `sites` (
+   `id` int(11) NOT NULL AUTO_INCREMENT,
+   `sname` varchar(127) DEFAULT NULL,
+   `surl` varchar(511) DEFAULT NULL,
+   `sdesc` varchar(511) DEFAULT NULL,
+   `insert_time` datetime DEFAULT NULL,
+   PRIMARY KEY (`id`)
+ ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- name:对应工程的名字；default:需要的缺省任务(运行"ant"不指明任务时执行的任务) -->
+<project name="studytree" default="dist" basedir=".">
+	
+	<!-- 建立目录结构
+		src       JAVA源码编辑目录
+		lib       jar包(类库)存放目录
+		bin       编译生成的class文件存放目录
+		dist      war和javadoc存放目录
+		WebRoot   jsp文件存放地方
+		config    配置文件存放地方	
+	-->
+	<property name="appName" value="studytree"/>
+	<property name="src.dir" value="src"/>
+	<property name="lib.dir" value="WebContent/WEB-INF/lib"/>
+	<property name="dist.dir" value="dist"/>
+	<property name="classes.dir" value="WebContent/WEB-INF/classes"/>
+	<property name="webapps.dir" value="C:/Tomcat6/webapps"/>
+	<property name="webroot.dir" value="WebContent"/>
+	<property name="test.dir" value="testdist" />
+	<property name="www.dir" value="SAEConfig" />
+	<property name="cloud.dir" value="cloudfoundry"/>
+	<property name="tomcat.home" value="C:/Tomcat6/"/>
+	
+	<!--target name="tomcat.stop">  
+		<java jar="${tomcat.home}/bin/bootstrap.jar" fork="true">  
+			<jvmarg value="-Dcatalina.home=${tomcat.home}"/>  
+			<arg line="stop"/>  
+		</java>  
+		<waitfor maxwait="5" maxwaitunit="second">  
+		      <available file="errors.log"/>  
+		</waitfor>  
+	</target>  
+	
+	<target name="start-tomcat" description="tomcat starting.....">  
+	      <exec executable="${tomcat.home}/bin/startup.bat" spawn="true" vmlauncher="false">  
+	      	<env key="CATALINA_HOME" value="${tomcat.home}" />  
+	      <arg line="/c start ${tomcat.home}/bin/startup.bat" />  
+	    </exec>         
+	</target-->  
+	 
+	
+	<!-- Compilation Classpath 路径设置 -->
+	<path id="compile.classpath">
+		<pathelement location="${classes.dir}"/>
+		<fileset dir="${lib.dir}" includes="**/*.jar" />  	
+	</path>
+	
+	<!-- Clean Target 删除先前的目录结构 -->
+	<target name="clean" description="Delete old build and dist directories">
+		<delete dir="${classes.dir}"/>
+		<delete dir="${dist.dir}/*.war"/>
+	</target>
+	
+	<!-- Prepare Target 建立打包的目的目录结构 -->
+	<target name="prepare">
+		<mkdir dir="${classes.dir}"/>
+		<mkdir dir="${dist.dir}"/>
+		<mkdir dir="${test.dir}"/>
+	</target>
+	
+	<!-- Compile Target 编译代码，在这之前先由prepare建立目录结构 -->  
+	<target name="compile" depends="prepare" description="Compile java sources">
+		<!-- Compile java class as necessary -->
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" encoding="utf-8" debug="true" debuglevel="source,lines,vars"  includeantruntime="on">
+			<classpath refid="compile.classpath"/>
+		</javac>
+	</target>
+	
+	<!-- Dist Target 将应用打包成线上环境使用的war-->  
+	<target name="dist" depends="clean,compile" description="create war file for the formal envionment">
+		<copy todir="${classes.dir}">
+			<fileset dir="${www.dir}">
+				<exclude name="*.svn"/>
+				<include name="**/*.xml"/>
+	            <include name="**/*.properties" />
+			</fileset>
+		</copy>
+		<war warfile="${dist.dir}/${appName}.war" webxml="${webroot.dir}/WEB-INF/web.xml">
+			<fileset dir="${webroot.dir}" >
+				<exclude name="WEB-INF/lib/servlet-api.jar"/>
+			</fileset>
+		</war>
+		<!-- jar jarfile="${dist.dir}/${appName}.war" basedir="${webroot.dir}"-->
+	</target>
+	
+	<!-- Dist Target 将应用打包成线上环境使用的war-->  
+		<target name="cloud" depends="clean,compile" description="create war file for the cloud envionment">
+			<copy todir="${classes.dir}">
+				<fileset dir="${cloud.dir}">
+					<exclude name="*.svn"/>
+					<include name="**/*.xml"/>
+		            <include name="**/*.properties" />
+				</fileset>
+			</copy>
+			<war warfile="${appName}.war" webxml="${webroot.dir}/WEB-INF/web.xml">
+				<fileset dir="${webroot.dir}" >
+					<exclude name="WEB-INF/lib/servlet-api.jar"/>
+				</fileset>
+			</war>
+			<!-- jar jarfile="${dist.dir}/${appName}.war" basedir="${webroot.dir}"-->
+		</target>
+	
+	<target name="testdist" depends="clean,compile" description="create war file for the test(10.5.22.99) envionment">
+		<copy todir="${classes.dir}">
+			<fileset dir="${src.dir}">
+				<exclude name="*.svn"/>
+				<include name="**/*.xml"/>
+	            <include name="**/*.properties" />
+			</fileset>
+		</copy>
+		<jar jarfile="${test.dir}/${appName}.war" basedir="${webroot.dir}"/>
+	</target>
+	
+	<target name="testdeploy"  description="deploy test war to local tomcat">
+		<delete dir="${webapps.dir}/${appName}.war"/>
+		<delete dir="${webapps.dir}/${appName}"/>
+		<delete dir="${classes.dir}"/>
+		<delete dir="${test.dir}"/>
+		<mkdir dir="${classes.dir}"/>
+		<mkdir dir="${test.dir}"/>
+		
+		<copy todir="${classes.dir}">
+			<fileset dir="${src.dir}">
+				<exclude name="*.svn"/>
+				<include name="**/*.xml"/>
+	            <include name="**/*.properties" />
+			</fileset>
+		</copy>
+
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" encoding="utf-8" debug="true" debuglevel="source,lines,vars" includeantruntime="on">
+			<classpath refid="compile.classpath"/>
+		</javac>
+		
+		<jar jarfile="${webapps.dir}/${appName}.war" basedir="${webroot.dir}"/>
+	</target>
+	<!--target name="test" depends="tomcat.stop,start-tomcat,testdeploy" description="deploy test war to tomcat and restart tomcat">
+	</target-->
+</project>

@@ -1,0 +1,18 @@
+
+
+.right {
+	float: right;
+}
+
+.wander {
+	float: left;
+	border-style: dashed;
+	border-color: #dedede;
+	padding: 30px;
+	margin: 50px auto;
+	border-radius:15px;
+}
+
+
+/*.connectedSortable ul li{ margin: 0 5px 5px 5px; padding: 5px; font-size: 1.2em; width: 520px; }*/
+/*#tabul li {width:120px; height:35px;}*/
