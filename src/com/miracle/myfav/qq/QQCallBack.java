@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import com.miracle.myfav.entity.User;
+import com.miracle.myfav.util.QRcodeGenerate;
 import com.qq.connect.QQConnectException;
 import com.qq.connect.api.OpenID;
 import com.qq.connect.api.qzone.UserInfo;
@@ -67,6 +68,13 @@ public class QQCallBack extends HttpServlet {
 				request.getSession().setAttribute("qq_openid", openID);
 				request.getSession().setAttribute("qq_token", accessToken);
 				request.getSession().setAttribute("qq_token_expirein", String.valueOf(tokenExpireIn));
+
+				String imgPath = getServletContext().getRealPath("/") + "qrcode/" + openID + ".png";
+				log.debug("path : " + getServletContext().getRealPath("/"));
+
+				String encoderContent = "http://studytree.cloudfoundry.com/Home?id=" + openID;
+				QRcodeGenerate handler = new QRcodeGenerate();
+				handler.encoderQRCode(encoderContent, imgPath, "png");
 
 				User user = new User();
 				user.setAvatar(userInfoBean.getAvatar().getAvatarURL30());

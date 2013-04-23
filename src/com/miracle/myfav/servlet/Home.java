@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,10 +31,11 @@ public class Home extends HttpServlet {
 
 		String uid = request.getParameter("id");
 
-		Cookie cookie = new Cookie("userid", uid);
-		cookie.setMaxAge(360000);
-		cookie.setPath("/");
-		response.addCookie(cookie);
+		// Cookie cookie = new Cookie("userid", uid);
+		// cookie.setMaxAge(360000);
+		// cookie.setPath("/");
+		// response.addCookie(cookie);
+		request.getSession().setMaxInactiveInterval(60 * 60 * 24 * 2);
 
 		List<UserSites> uslist = new ArrayList<UserSites>();
 		if (uid != null && !uid.equals("")) {
